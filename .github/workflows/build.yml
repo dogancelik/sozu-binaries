@@ -9,28 +9,40 @@ env:
 
 jobs:
   release:
-    name: release ${{ matrix.target }} (with non-required env)
-    runs-on: ubuntu-latest
+    name: release ${{ matrix.target }}
     if: github.event_name == 'release'
+    runs-on: ${{ matrix.platform }}
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
-        include:
-          - target: x86_64-pc-windows-gnu
-            archive: zip
-          - target: x86_64-unknown-linux-musl
-            archive: tar.gz
-          - target: x86_64-apple-darwin
-            archive: zip
+        platform: [macos-latest, ubuntu-latest, windows-latest]
     steps:
-      - uses: actions/checkout@master
+      - name: Checkout repository
+        uses: actions/checkout@v3
         with:
           repository: ${{ env.BUILD_REPO }}
-          path: sozu
-      - name: Compile and release
-        uses: rust-build/rust-build.action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
         with:
-          RUSTTARGET: ${{ matrix.target }}
-          SRC_DIR: /home/runner/work/sozu-binaries/sozu-binaries/sozu
+          toolchain: stable
+      - name: Install dependencies
+        run: |
+          rustup target add ${{ matrix.target }}
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          use-cross: true
+          command: build
+          args: --target ${{ matrix.target }} --release --all-features --target-dir=/tmp
+      - name: Debug missing files
+        run: |
+          echo "target dir:"
+          ls -a /tmp/release
+          echo "deps:"
+          ls -a /tmp/release/deps
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.target }}
+          path: |
+            /tmp/release
