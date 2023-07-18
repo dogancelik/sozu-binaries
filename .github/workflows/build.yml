@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
         with:
-          submodules: true
+          submodules: 'true'
           path: "/github/workspace"
       - name: Compile and release
         uses: rust-build/rust-build.action@master
