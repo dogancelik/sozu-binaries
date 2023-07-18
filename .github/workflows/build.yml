@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'release'
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         include:
           - target: x86_64-pc-windows-gnu
@@ -32,4 +32,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           RUSTTARGET: ${{ matrix.target }}
-          SRC_DIR: "sozu"
+          SRC_DIR: "/home/runner/work/sozu"
