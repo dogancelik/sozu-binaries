@@ -33,4 +33,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           RUSTTARGET: ${{ matrix.target }}
-          SRC_DIR: "/home/runner/work/sozu"
+          SRC_DIR: /home/runner/work/sozu-binaries/sozu-binaries/sozu
