@@ -15,7 +15,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-latest, ubuntu-latest, windows-latest]
+        include:
+          - target: x86_64-pc-windows-gnu
+            archive: zip
+          - target: x86_64-unknown-linux-musl
+            archive: tar.gz
+          - target: x86_64-apple-darwin
+            archive: zip
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -31,14 +37,9 @@ jobs:
       - name: Build
         uses: actions-rs/cargo@v1
         with:
+          use-cross: true
           command: build
-          args: --release --all-features --target-dir=/tmp
-      - name: Debug missing files
-        run: |
-          echo "target dir:"
-          ls -a /tmp/release
-          echo "deps:"
-          ls -a /tmp/release/deps
+          args: --target ${{ matrix.target }} --release --all-features --target-dir=/tmp
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         with:
