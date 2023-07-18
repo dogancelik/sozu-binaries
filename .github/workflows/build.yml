@@ -3,6 +3,10 @@ on:
     types: [created]
 
 
+env:
+  BUILD_REPO: sozu-proxy/sozu
+
+
 jobs:
   release:
     name: release ${{ matrix.target }} (with non-required env)
@@ -21,8 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
         with:
-          submodules: true
-          path: "/github/workspace"
+          repository: ${{ env.BUILD_REPO }}
       - name: Compile and release
         uses: rust-build/rust-build.action@master
         env:
