@@ -23,6 +23,7 @@ jobs:
       - uses: actions/checkout@master
         with:
           submodules: true
+          path: "/github/workspace"
       - name: Compile and release
         uses: rust-build/rust-build.action@master
         env:
@@ -30,7 +31,7 @@ jobs:
         with:
           RUSTTARGET: ${{ matrix.target }}
           EXTRA_FILES: "README.md"
-          SRC_DIR: "sozu"
+          SRC_DIR: "/github/workspace/sozu"
           ARCHIVE_TYPES: ${{ matrix.archive }}
           PRE_BUILD: "pre_build.sh"
           POST_BUILD: "test/post_build.sh"
