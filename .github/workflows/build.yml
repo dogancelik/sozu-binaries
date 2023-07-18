@@ -26,6 +26,7 @@ jobs:
       - uses: actions/checkout@master
         with:
           repository: ${{ env.BUILD_REPO }}
+          path: sozu
       - name: Compile and release
         uses: rust-build/rust-build.action@master
         env:
