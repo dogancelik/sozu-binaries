@@ -24,6 +24,7 @@ jobs:
         with:
           repository: 'sozu-proxy/sozu'
           ref: ${{ github.event.release.tag_name }}
+          path: 'sozu'
       - name: Compile and release
         uses: rust-build/rust-build.action@master
         env:
